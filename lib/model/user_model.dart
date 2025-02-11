@@ -10,29 +10,26 @@ class UserModel {
   String? name;
   String? email;
   String? profilePic;
-  String? tokenId;
+  String? token;
 
   UserModel({
     this.id,
     this.name,
     this.email,
-    this.profilePic,
-    this.tokenId
-  });
+    this.profilePic, this.token});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     id: json["id"],
     name: json["name"],
     email: json["email"],
-    profilePic: json["profile_pic"],
-    tokenId: json["tokenId"]
-  );
+      profilePic: json["profilePicture"],
+      token: json["tokenId"]);
 
   Map<String, dynamic> toJson() => {
-  "id": id,
-  "name": name,
-  "email": email,
-  "profile_pic": profilePic,
-    "tokenId":tokenId
-  };
+        "id": id,
+        "name": name,
+        "email": email,
+        "profilePicture": profilePic,
+        "tokenId": token
+      };
 }

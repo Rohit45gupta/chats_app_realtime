@@ -1,6 +1,12 @@
+import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import '../controller/user_view_model.dart';
 import 'LoginPage.dart';
 
@@ -12,14 +18,16 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  File? imageFile;
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    var provider= Provider.of<UserViewModel>(context,listen: false);
+    var provider = Provider.of<UserViewModel>(context, listen: false);
+
     return Scaffold(
       body: Stack(
         children: [
-
           Container(
             color: Colors.black,
             alignment: Alignment.topLeft,
@@ -37,6 +45,19 @@ class _SignupPageState extends State<SignupPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: ListView(
                   children: [
+                    GestureDetector(
+                      onTap: takeImage,
+                      child: CircleAvatar(
+                        maxRadius: 60,
+                        backgroundColor: Colors.blueAccent,
+                        foregroundColor: Colors.white,
+                        backgroundImage:
+                            imageFile != null ? FileImage(imageFile!) : null,
+                        child: imageFile == null
+                            ? const Icon(Icons.camera_alt_outlined)
+                            : null,
+                      ),
+                    ),
                     const Padding(
                       padding: EdgeInsets.only(left: 15),
                       child: Text(
@@ -94,16 +115,23 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                             ),
                             onPressed: () {
-                              provider.userSignUp(context);
+                              signUpAndUploadImage(provider);
                             },
-                            child: Text("Sign Up"),
+                            child: const Text("Sign Up"),
                           ),
                         ),
                       ],
                     ),
-                    TextButton(onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
-                    }, child: Text("All ready have Account"))
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
+                        );
+                      },
+                      child: const Text("Already have an account"),
+                    ),
                   ],
                 ),
               ),
@@ -124,18 +152,56 @@ class _SignupPageState extends State<SignupPage> {
               ),
               child: const Padding(
                 padding: EdgeInsets.only(left: 10, top: 80),
-                child: Text(
-                  "Create Account",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
-                ),
+                child: Text("Create Account",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    )),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void takeImage() async {
+    final ImagePicker imagePicker = ImagePicker();
+    final XFile? img = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (img != null) {
+      setState(() {
+        imageFile = File(img.path);
+      });
+    }
+  }
+
+  Future<void> uploadImage(String uId) async {
+    if (imageFile == null) return;
+
+    try {
+      Reference storeImage =
+          FirebaseStorage.instance.ref().child('profile_Pic/$uId.jpg');
+      await storeImage.putFile(imageFile!); // Wait for the upload to complete
+      String imageUrl =
+          await storeImage.getDownloadURL(); // Get the download URL
+
+      DatabaseReference databaseRef =
+          FirebaseDatabase.instance.ref().child("user/$uId");
+      await databaseRef.update({"profilePicture": imageUrl});
+    } catch (ex) {
+      print("Error uploading image: $ex");
+    }
+  }
+
+  Future<void> signUpAndUploadImage(UserViewModel provider) async {
+    try {
+      await provider.userSignUp(context);
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await uploadImage(user.uid);
+      }
+    } catch (ex) {
+      print("Error during sign up: $ex");
+    }
   }
 }

@@ -1,16 +1,17 @@
 
 import 'dart:core';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../model/user_model.dart';
-
 import '../view/LoginPage.dart';
+import '../view/get_device_token.dart';
 import '../view/home_screen.dart';
+
 class UserViewModel with ChangeNotifier{
   final  auth = FirebaseAuth.instance;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -22,18 +23,23 @@ class UserViewModel with ChangeNotifier{
   List<UserModel> _userData= [];
   List<UserModel> get userData=> _userData;
 
+  UserModel? _currentUser;
+
+  UserModel? get currentuser => _currentUser;
+
   // SignUp code//
 
-  void userSignUp(BuildContext context) async{
+  userSignUp(BuildContext context) async {
     var name =  nameController.text.toString();
     var email = emailController.text.toString();
     var password= passwordController.text.toString();
-    var token=await getDeviceToken();
 
     if(name.isNotEmpty && email.isNotEmpty && password.isNotEmpty){
-
       isLoading = true;
       notifyListeners();
+
+      DeviceTokenService().storeDeviceToken();
+
       try{
         var result = await auth.createUserWithEmailAndPassword(email: email, password: password);
 
@@ -44,7 +50,6 @@ class UserViewModel with ChangeNotifier{
             "id":uid,
             "name":name,
             "email":email,
-            "tokenId":token
           });
           nameController.clear();
           emailController.clear();
@@ -60,7 +65,6 @@ class UserViewModel with ChangeNotifier{
         isLoading = false;
         notifyListeners();
       }
-
     }
     else{
       Fluttertoast.showToast(msg: "Please fill the all field");
@@ -108,6 +112,7 @@ class UserViewModel with ChangeNotifier{
           return UserModel.fromJson(Map<String, dynamic>.from(e.value));
         }).toList();
         _userData = tempList;
+        notifyListeners();
       } else {
         _userData = [];
       }
@@ -119,21 +124,27 @@ class UserViewModel with ChangeNotifier{
       notifyListeners();
     }
   }
-  Future<String?> getDeviceToken() async{
-    try{
-      String? token = await messaging.getToken();
-      if(token!= null){
-        print("Device Token $token");
-        return token;
-      }
-      else{
-        print(" failed to generate device token ");
-      }
-      return token!;
-    }catch(ex){
-      print("Error while fetching device Token: $ex");
+
+  Future<void> getCurrentUser() async {
+    final currentUser = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUser != null) {
+      print("No user is LoggedIn");
+      return;
     }
-    return null;
+    try {
+      DatabaseReference databaseReference =
+          FirebaseDatabase.instance.ref("user/$currentUser");
+      final datasnapShot = await databaseReference.get();
+      if (datasnapShot.exists) {
+        _currentUser = UserModel.fromJson(
+            Map<String, dynamic>.from(datasnapShot.value as Map));
+        notifyListeners();
+      } else {
+        print("No data found");
+      }
+    } catch (ex) {
+      print("Error $ex");
+    }
   }
 
 }

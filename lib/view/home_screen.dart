@@ -1,9 +1,14 @@
 import 'package:chat_app_realtime/controller/notification_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+
 import '../controller/user_view_model.dart';
 import 'chat_page.dart';
+import 'get_device_token.dart';
 
 class HomePage extends StatefulWidget {
   final String uid;
@@ -16,14 +21,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   NotificationService notificationService = NotificationService();
+  DeviceTokenService deviceTokenService = DeviceTokenService();
+  String? name;
+  String? email;
+  String? profilePic;
 
   @override
   void initState() {
     super.initState();
     NotificationService notificationService = NotificationService();
     notificationService.requestNotificationPermission();
-    // notificationService.getDeviceToken();
+    DeviceTokenService().storeDeviceToken();
     notificationService.getServerKey();
+    Provider.of<UserViewModel>(context, listen: false).getCurrentUser();
+
     Future.microtask(() {
       Provider.of<UserViewModel>(context, listen: false)
           .fetchUserData(widget.uid);
@@ -78,8 +89,11 @@ class _HomePageState extends State<HomePage> {
   @override
   @override
   Widget build(BuildContext context) {
+    Provider.of<UserViewModel>(context, listen: false).getCurrentUser();
+
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: Colors.blueAccent,
         title: const Text(
           "ChatApp",
@@ -87,16 +101,190 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              Provider.of<UserViewModel>(context, listen: false)
-                  .logoutUser(context);
-            },
+            onPressed: () {},
             icon: const Icon(
-              Icons.logout,
+              Icons.camera_alt_outlined,
               color: Colors.white,
             ),
-          )
+          ),
+          PopupMenuButton(
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                        child: ListTile(
+                      leading: Icon(Icons.group_add_outlined),
+                      title: Text('New group'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    )),
+                    PopupMenuItem(
+                        child: ListTile(
+                      leading: Icon(Icons.settings),
+                      title: Text('Settings'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    )),
+                    PopupMenuItem(
+                        child: ListTile(
+                      leading: Icon(Icons.payment_outlined),
+                      title: Text('Payments'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    )),
+                    PopupMenuItem(
+                        child: ListTile(
+                      leading: Icon(Icons.logout_outlined),
+                      title: Text('Logout'),
+                      onTap: () {
+                        Provider.of<UserViewModel>(context, listen: false)
+                            .logoutUser(context);
+                        Navigator.pop(context);
+                      },
+                    )),
+                  ])
         ],
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        child: ListView(
+          children: [
+            Card(
+              elevation: 7,
+              color: Colors.blueAccent,
+              child: SizedBox(
+                height: 120,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        maxRadius: 25,
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(profilePic.toString()),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Text(
+                              name ?? "unknown",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Text(
+                              email ?? "unknown",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white,
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            ListTile(
+                leading: Icon(
+                  Icons.person_pin,
+                  color: Colors.blueAccent,
+                ),
+                title: Text(
+                  "Profile",
+                  style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+                ),
+                trailing: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.blueAccent,
+                    ))),
+            SizedBox(
+              height: 5,
+            ),
+            ListTile(
+              onTap: () {},
+              leading: Icon(
+                Icons.wallet_rounded,
+                color: Colors.blueAccent,
+              ),
+              title: Text(
+                'Purse',
+                style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+              ),
+              trailing: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            ListTile(
+              onTap: () {},
+              leading: Icon(
+                Icons.settings,
+                color: Colors.blueAccent,
+              ),
+              title: Text(
+                'Settings',
+                style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+              ),
+              trailing: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            ListTile(
+              onTap: () {},
+              leading: Icon(
+                Icons.share,
+                color: Colors.blueAccent,
+              ),
+              title: Text(
+                'Share',
+                style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+              ),
+              trailing: IconButton(
+                onPressed: () async {
+                  var text = await deviceTokenService.generateDynamicLink();
+                  Share.share(text.toString());
+                },
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Consumer<UserViewModel>(
         builder: (context, userViewModel, child) {
@@ -118,6 +306,7 @@ class _HomePageState extends State<HomePage> {
                             otherUid: user.id.toString(),
                             name: user.name.toString(),
                             email: user.email.toString(),
+                            profilePic: user.profilePic.toString(),
                           ),
                         ));
                   },
@@ -125,7 +314,10 @@ class _HomePageState extends State<HomePage> {
                     margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: ListTile(
                       leading: CircleAvatar(
-                        child: Icon(Icons.person),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(user.profilePic.toString()),
+                        ),
                       ),
                       title: Text(
                         "${user.name}",
@@ -141,5 +333,27 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
+  }
+
+  Future<void> getCurrentUser() async {
+    final currentUser = FirebaseAuth.instance.currentUser!.uid;
+    try {
+      DatabaseReference databaseReference =
+          FirebaseDatabase.instance.ref("user/$currentUser");
+      final datasnapShot = await databaseReference.get();
+      if (datasnapShot.exists) {
+        Map<String, dynamic> user =
+            Map<String, dynamic>.from(datasnapShot.value as Map);
+        setState(() {
+          name = user['name'];
+          email = user['email'];
+          profilePic = user['profilePic'];
+        });
+      } else {
+        print("No data found");
+      }
+    } catch (ex) {
+      print("Error $ex");
+    }
   }
 }

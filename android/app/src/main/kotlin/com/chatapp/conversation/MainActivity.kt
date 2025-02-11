@@ -1,4 +1,4 @@
-package com.example.chat_app_realtime
+package com.chatapp.conversation
 
 import io.flutter.embedding.android.FlutterActivity
 

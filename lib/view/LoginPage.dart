@@ -1,5 +1,4 @@
 
-
 import 'package:chat_app_realtime/view/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               height: 180,
               decoration: const BoxDecoration(
-                color: Colors.pinkAccent,
+                color: Colors.blueAccent,
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(30),
                   bottomLeft: Radius.circular(30),

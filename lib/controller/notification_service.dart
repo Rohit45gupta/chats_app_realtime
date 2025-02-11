@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'package:http/http.dart'as http;
+
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart'as http;
 
 class NotificationService{
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -30,8 +31,6 @@ class NotificationService{
     }
   }
 
-
-
   Future<String>getServerKey()async{
     var scopes = [
       'https://www.googleapis.com/auth/userinfo.email',
@@ -42,15 +41,18 @@ class NotificationService{
     final client= await clientViaServiceAccount(
         ServiceAccountCredentials.fromJson({
           "type": "service_account",
-          "project_id": "fir-emailauthflutter-dfdf7",
-          "private_key_id": "e68171a445a2fd0cab88991b36048e0fa609bd47",
-          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC/2nxDzwIT+rZw\n7Z3E9Ah2udz9O3qPe0iurDqvMt0WlMz4ssXCOiokiRAyNiPT5ZMMFiOa3g71/fL1\nNlXc57If5BkzpcNtLOPmXsNdPeq0XdvcNXzC7OYx8LEblB3m47GR71JKSDmJsLqW\n1Z+b9NcPWznazyp65eCjFRDY/eHU86ddR8ik/97OwQ7l+shAmjFaFI/RxV357uHz\nAznPSxNPMRMwfO+veFWVS8b94GF/ZD39FoCQ9XSkhSd6mtdu77jgVMiTGaEWFJfU\no6DN4oJqGx7aVmE2GdUE+azx2REb7qxyUDfjwjvdPXcpuZBorPiYY195PEQen47k\nzxYwg63NAgMBAAECggEADcTg+T7gn811DYrIMWvwNZEmTphXtfd7ommi9pL4chfw\n1AKElel1v9SEcI4ZKSqHUK1AFevM+BOnPbkOFYIdcxN8SYwih/HaU1zGuajpcNNx\npY7DKvw0ky36kAej07/QrTAXYFRpqLuh0JR5VYiPbL832j/XBSX9ZsbqxCAIdq98\nC4Igsgy14+LXEkCY9NwzUbp7hILf0qBep0wzr+6g5UwoyCAswMq+U1qfAmfPfwD9\n0LtCvEdn3IWiKyLxoXrXTRYid2rtIf2XNLQQHE20k4e7EMjnd1K/ehMYgz+95njz\nFVlI8WxKgefLaSjZP/3F73xsx7+e8sGL+beyB7FdEQKBgQDxyULfAdjfPGN6qgaD\nsTRScmxknQGgf0/oHCjIlvV/qfApoib96dEp7ks+tJqL/fLf/1Fc8NMeOzQn9xZQ\nCBc5++ViWaaaNvcdMApVxU9tPp6Lqy1HfwBeumEzgoCdOOJu24bYq97t8pSuuhgv\n6AAzG+o4GQ90r8z4Mem8TxLrmQKBgQDLIcQv67yRiorrZRebbcfGsEKs2lbP+/wd\nC3cj2A/dSj9pSC5T6CIPwL/MWK+CrU/nb5nl9PqgAFpnWMkzskGwV/0EVWdZcVKW\n9N1kYHU1YM8U90PdepB6ktgfZJwEMJ2BMvJJHAIdOHJycWmRAZzNCZyLYHrSTAsu\nQ+Gw45+UVQKBgCHKVc0izfNM1j5DWsu2zTAki594Dc0nXbx7ivuVlVO1JTo8TiS4\nM6IfimaGCP89i17gqLdLdMXJ0l0ve+/NYamZ2ZHoI49z1Q9AMoGQJKyIztGIJ7jR\nN/UFKSZwu5a9Z2/EwFCxnGM2vq64lT7Etppt8UrLvcw58XRSTW8iwespAoGAbiAO\nRpSdFKJxkhCqbb9kkVk5rJBqhDNuiSiQHMSkRSpdmmxhgWfWH4g180kZTdU7/pLI\ncp0PyvKmEGVYH0jCyCHLsC/E6f6/8csqw6JvqNKlMg6jok0ySuGVfd+Dndnlagf+\nxpgCpWjW0yidPNoM8jQFxKI3tA85+IkgsE+XUkkCgYBd9/56tnp3zW0N8+e+kSeA\nHu6EzWSUTmnA0xLB1IOujbf1DiOd8Hqss+j28iX0UsqZKnjH4DJcZFuziCk8d93B\nMI7GOsoS6WggTEeLDGGizryWufNWz3w8k6W3v5j4O56SjaaiM+7BXklN4oXMgQyg\ncaBzeTXrpAXjhanQFlkzmg==\n-----END PRIVATE KEY-----\n",
-          "client_email": "firebase-adminsdk-ckwyj@fir-emailauthflutter-dfdf7.iam.gserviceaccount.com",
-          "client_id": "100111761804282742848",
+          "project_id": "storage-app-a4864",
+          "private_key_id": "6469266098227af07a700da2d8eb490315b4cdb7",
+          "private_key":
+              "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC1T/bOLRbnUkmA\ntODjvUaQXJR4CtaPOoUvJxI1MPPLNomcEQAcwO3NY8sROKvKkj59CQnB9KstZzrP\nBiU215YM/2ldaK8xWjCH4sehr+ounzm34obAQgHVJwlUl9i8z3FMke5ieK6bb+9U\njlPstdfU86rv14WKSopDIYhXRaGlSj8x/zO7oQKD1dEk2ZVW+e+yAakCYwQ2zUy1\nJs09iJayDtgmxxmMRv/jldTKvW6TdlIGMK7onZ/LxWTntIViHj7EOcE7b2qfww/0\n9D7N0yFgaC0Tf6xu0gscvRG5fIVHdJnFy5+2QPmYtY8OKr74dirYPnGyHwnOB5H0\nn8wEHSwjAgMBAAECggEAQ53BHG2rS3QgDjwmXDgTjzW/dq8QChUYYxfOjgCmAoRh\nuE6MvKxkYsLTEaaRRnfYjvemaGsuxT1orJkNmtC2WD2OFTQ7lYudaqezrEQ28NEX\njNCRUTSsi0nGDIKeZPd1uMj5XkbEUxpg5ic3/CBqj7OZbV1yIzseKd/hAS7qFAIk\nuOjJrTNmf9BtThDiwX3RYqm8SvnscynglWgD3oEE4qyYb9wRDoy1fuG2+fEnpIF1\na9yHDOxxVMq90J73UHX+3W9mXcSOscQWAZB3sUznRDr7+Smw+ssGpeLkFGSiKIji\nZgVX+OcKW2ATPd2zN/yDu4Jjl8sBH3/KASzAXs/OmQKBgQD2s+AGu9N55ECW/V2D\nLCKuupQ9fRoBlH2Z4fNwkdPcwJHpeAxm0ZF6Q3ZDZWB2/OwUQmTX8jYOZWX+aQJo\ni2lGkqP7WN77uLsFemrSULVYdG7hXlBvE8F+6x98e+58hXfEFawqdEWkCAYTUxHM\njDPa8uKn68GFrF2kXR2Xni7X+QKBgQC8JThVnSjDhiWFgIU7kvH/Cm0/ZRsDPZoD\nDlqXTmqvEEhy+ZL+6e4hZ8Id3zidYsuaNsOU3+vaGbGk9eWcXZEox65A99gBW40W\n4Pi+QnwbNRfU7npVorWoD9nSWw8cI4/Gmb86yXaGwQEywZZDEu5GB14iJUc443Ov\nsDsVOcOD+wKBgQCspK5nJ/RTfddxkrdpP266BloNOcoERw0qrkP1iCfSeXTjBJ7x\nKUF8ZU+S1JQQUOlJODloIdmQc4dP5d7ImJ9Awwg8sjHByMIgkE3HBrIRx9F8p8r0\nIMgtcI9lRzlbLO/maiBEyX+ezfqqdVykX40+cPELAGI6kKgriPpXi1xOyQKBgBQG\nJhO+kTsWCOJHhmaLwiOxuWTY3uIeaUjP+0ZFO0d8hSlvdHya6xQ1FczWGBFwFVlJ\nYNF0b4ab23NCFHjq4GslrV8OwbeLRd3cfbzKGKlQokOwSebZVVoYrcccl+QXyNKL\nRHX+QRYgbn83aUWkOyXK3PLnYsgkNQjKyc79gdiHAoGBAK0P4zUajY3EP8P45KnW\nF7t0cNoZ9o3w1J2lA+D9oh+dRk0n+NTTrcHY2SGZNvqtKG61FaZLpYMpZfnjIYes\nu6nmNYjogZFCpf3ISiZ6x2M9qGYeSOBgLWznPnex5ZeXart+rG1mBAWn1ATEXMY8\ndgK3+enHBFGD3ET+UsiinPe0\n-----END PRIVATE KEY-----\n",
+          "client_email":
+              "firebase-adminsdk-jtx8l@storage-app-a4864.iam.gserviceaccount.com",
+          "client_id": "117981088789208489519",
           "auth_uri": "https://accounts.google.com/o/oauth2/auth",
           "token_uri": "https://oauth2.googleapis.com/token",
           "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-          "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ckwyj%40fir-emailauthflutter-dfdf7.iam.gserviceaccount.com",
+          "client_x509_cert_url":
+              "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-jtx8l%40storage-app-a4864.iam.gserviceaccount.com",
           "universe_domain": "googleapis.com"
         }
         ),scopes
@@ -80,23 +82,26 @@ class NotificationService{
         message.notification?.title,
         message.notification?.body,
         notificationDetails,
-        payload: 'Not Present'
-        );
+        payload: 'Not Present');
     }
 
-  void sendOrderNotification({required String message,required String token,required String senderName })async{
+  Future<void> sendOrderNotification(
+      {required String message,
+      required String token,
+      required String senderName}) async {
     print('token id :$token');
     final serverKey=await getServerKey();
     try{
-      final response=await http.post(Uri.parse('https://fcm.googleapis.com/v1/projects/flutterfirebaseauth-439e4/messages:send'),
+      final response = await http.post(
+          Uri.parse(
+              'https://fcm.googleapis.com/v1/projects/storage-app-a4864/messages:send'),
           headers: <String,String>{
             'Content-Type':'application/json',
-            'Authorization':'Bearer $serverKey  '
+            'Authorization': 'Bearer $serverKey'
           },
           body: jsonEncode(<String, dynamic>{
             "message":{
-              "token":token,
-              "data":{},
+              "token": token,
               "notification":{
                 "title":senderName,
                 "body":message
@@ -105,9 +110,13 @@ class NotificationService{
           })
       );
       if(response.statusCode==200){
+        print('Notification send success');
+        Fluttertoast.showToast(msg: ' send notification successfully');
       }else{
-        print('failed to send notification,Status code:${response.statusCode}');
-        Fluttertoast.showToast(msg: 'Failed to send notification');
+        print('failed to send notification,Status code:${response.body}');
+        Fluttertoast.showToast(
+            msg: 'Failed to send notification ${response.body}');
+        Fluttertoast.showToast(msg: token);
       }
     }catch(ex){
       print('error sending notification: $ex');

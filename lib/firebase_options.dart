@@ -25,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -47,34 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBKiH-4Ha_1g_nJxmvPGLYs_iZoi46_x-w',
-    appId: '1:964937077573:web:37b930c45a1c21fe03242c',
-    messagingSenderId: '964937077573',
-    projectId: 'fir-emailauthflutter-dfdf7',
-    authDomain: 'fir-emailauthflutter-dfdf7.firebaseapp.com',
-    databaseURL: 'https://fir-emailauthflutter-dfdf7-default-rtdb.firebaseio.com',
-    storageBucket: 'fir-emailauthflutter-dfdf7.firebasestorage.app',
-    measurementId: 'G-S4P8W2JMKY',
+    apiKey: 'AIzaSyAfMxLbGdfl-l5z6-6vZoCo6QjU0TzhEkE',
+    appId: '1:731006899363:web:3759087891573415a7db16',
+    messagingSenderId: '731006899363',
+    projectId: 'storage-app-a4864',
+    authDomain: 'storage-app-a4864.firebaseapp.com',
+    storageBucket: 'storage-app-a4864.appspot.com',
+    measurementId: 'G-XSR3BGNBEW',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBFQOC6Xvi4pQxCV9ctREM-0OSzRegdT78',
-    appId: '1:964937077573:android:54aae50845349f2803242c',
-    messagingSenderId: '964937077573',
-    projectId: 'fir-emailauthflutter-dfdf7',
-    databaseURL: 'https://fir-emailauthflutter-dfdf7-default-rtdb.firebaseio.com',
-    storageBucket: 'fir-emailauthflutter-dfdf7.firebasestorage.app',
+    apiKey: 'AIzaSyC0Y3JLFId9Gc8L74f27UAUVkfztFDWF20',
+    appId: '1:731006899363:android:285bdf351dc397f1a7db16',
+    messagingSenderId: '731006899363',
+    projectId: 'storage-app-a4864',
+    storageBucket: 'storage-app-a4864.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCZux_QZKnUGkalRad9f_mxoCujDY_szCA',
-    appId: '1:964937077573:ios:a6c9731261ab3e5e03242c',
-    messagingSenderId: '964937077573',
-    projectId: 'fir-emailauthflutter-dfdf7',
-    databaseURL: 'https://fir-emailauthflutter-dfdf7-default-rtdb.firebaseio.com',
-    storageBucket: 'fir-emailauthflutter-dfdf7.firebasestorage.app',
-    androidClientId: '964937077573-71dlq5f8qc0cdjmiijp6vi2q1453k96a.apps.googleusercontent.com',
-    iosClientId: '964937077573-a05iu00l5cj339b7foveoktgl4neagmm.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAtZmM03vtnGFONZiF7OMlZly9gisXtN7w',
+    appId: '1:731006899363:ios:1f77a6932d8be81ca7db16',
+    messagingSenderId: '731006899363',
+    projectId: 'storage-app-a4864',
+    storageBucket: 'storage-app-a4864.appspot.com',
+    iosBundleId: 'com.chatapp.conversation',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAtZmM03vtnGFONZiF7OMlZly9gisXtN7w',
+    appId: '1:731006899363:ios:995f2a0bd6fcc536a7db16',
+    messagingSenderId: '731006899363',
+    projectId: 'storage-app-a4864',
+    storageBucket: 'storage-app-a4864.appspot.com',
     iosBundleId: 'com.example.chatAppRealtime',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAfMxLbGdfl-l5z6-6vZoCo6QjU0TzhEkE',
+    appId: '1:731006899363:web:63ab860ef0036ea4a7db16',
+    messagingSenderId: '731006899363',
+    projectId: 'storage-app-a4864',
+    authDomain: 'storage-app-a4864.firebaseapp.com',
+    storageBucket: 'storage-app-a4864.appspot.com',
+    measurementId: 'G-BXLBETVHM0',
   );
 }

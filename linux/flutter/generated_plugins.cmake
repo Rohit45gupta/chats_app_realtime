@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+
         audioplayers_linux
         file_selector_linux
         flutter_secure_storage_linux
@@ -10,6 +11,12 @@ list(APPEND FLUTTER_PLUGIN_LIST
         url_launcher_linux
         window_to_front
         zego_express_engine
+
+        file_selector_linux
+        flutter_secure_storage_linux
+        url_launcher_linux
+        window_to_front
+
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

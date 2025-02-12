@@ -1,5 +1,9 @@
 import 'dart:io';
 
+
+import 'package:chat_app_realtime/controller/call_request_service.dart';
+
+
 import 'package:chat_app_realtime/controller/notification_service.dart';
 import 'package:chat_app_realtime/view/user_status_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +14,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/chat_view_model.dart';
+
+import 'audio_video_call.dart';
+import 'generate_call_id.dart';
+
 import 'home_screen.dart';
 
 class ChatPage extends StatefulWidget {
@@ -30,12 +38,19 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+
+  final uId = FirebaseAuth.instance.currentUser!.uid;
+
   final uId = FirebaseAuth.instance.currentUser?.uid;
+
   ScrollController controller = ScrollController();
   UserStatusManager userStatusManager = UserStatusManager();
   NotificationService notificationService = NotificationService();
   var firebaseInstance = FirebaseAuth.instance.currentUser!.displayName;
   File? imageFile;
+
+  final _callService = RequestCallService();
+
 
   @override
   void initState() {
@@ -112,7 +127,13 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () => (),
               icon: Icon(Icons.add_call, color: Colors.white)),
           IconButton(
+
+              onPressed: () {
+                _startCall();
+              },
+
               onPressed: () => (),
+
               icon: Icon(
                 Icons.video_call,
                 color: Colors.white,
@@ -272,7 +293,16 @@ class _ChatPageState extends State<ChatPage> {
                   child: IconButton(
                       onPressed: () {
                         // sendNotificationToUser(senderName: firebaseInstance.toString(), message: viewModel.chatController.text, otherUid: viewModel.otherUId);
+
+
+                        if (viewModel.chatController.text.trim().isNotEmpty) {
+                          viewModel.sendChat(otherUid: widget.otherUid);
+                        } else {
+                          print('please fill the textfields');
+                        }
+
                         viewModel.sendChat(otherUid: widget.otherUid);
+
                         Future.delayed(
                           Duration(milliseconds: 300),
                           () {
@@ -347,6 +377,35 @@ class _ChatPageState extends State<ChatPage> {
         });
   }
 
+  void _listenForIncomingCall() {
+    _callService.listenForIncomingcall(uId).listen(
+      (event) {
+        if (event.snapshot.exists) {
+          Map callData = event.snapshot.value as Map;
+          String callID = callData['call_id'];
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CallPage(
+              callID: callID,
+              senderName: widget.name,
+            ),
+          ));
+        }
+      },
+    );
+  }
+
+  void _startCall() {
+    String callID = GenerateCallId.generateCallId(widget.otherUid, uId);
+    _callService.sendCallRequest(widget.otherUid, callID);
+    _listenForIncomingCall();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CallPage(
+        callID: callID,
+        senderName: widget.name,
+      ),
+    ));
+  }
+
 // Future<void> sendNotificationToUser({required String senderName, required String message,required String otherUid}) async {
 //   var deviceTokenGetData = DeviceTokenService();
 //   String? deviceToken =
@@ -361,4 +420,5 @@ class _ChatPageState extends State<ChatPage> {
 //     Fluttertoast.showToast(msg: 'erro');
 //    }
 //   }
+
 }

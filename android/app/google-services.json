@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "731006899363",
+    "firebase_url": "https://storage-app-a4864-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "storage-app-a4864",
+    "storage_bucket": "storage-app-a4864.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731006899363:android:285bdf351dc397f1a7db16",
+        "android_client_info": {
+          "package_name": "com.chatapp.conversation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0Y3JLFId9Gc8L74f27UAUVkfztFDWF20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731006899363:android:b23df325726c674fa7db16",
+        "android_client_info": {
+          "package_name": "com.example.storage_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0Y3JLFId9Gc8L74f27UAUVkfztFDWF20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731006899363:android:341c8ab9332cad1da7db16",
+        "android_client_info": {
+          "package_name": "com.example.storage_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0Y3JLFId9Gc8L74f27UAUVkfztFDWF20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
